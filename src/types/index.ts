@@ -1,6 +1,6 @@
 export interface Owner{
     id: number;
-    firtsName: string;
+    firstName: string;
     lastName: string;
     fullName: string;
     phone: string;
@@ -10,14 +10,14 @@ export interface Owner{
 }
 
 export interface CreateOwnerDto{
-    firtsName: string;
+    firstName: string;
     lastName: string;
     phone: string;
     email: string;
 }
 
 export interface UpdateOwnerDto{
-    firtsName: string;
+    firstName: string;
     lastName: string;
     phone: string;
     email: string;
@@ -57,7 +57,7 @@ export interface Appointment{
     reason: string;
     status: string;
     notes: string | null;
-    canBeCanceled: boolean;
+    canBeCancelled: boolean;
     createdAt: string;
     petId: number;
     petName: string;
