@@ -81,7 +81,6 @@ const OwnersPage = () => {
     setCurrentId(null);
     setIsEditing(false);
   };
-
   return (
     <div className="page">
       <h1>Propietarios</h1>

@@ -12,5 +12,4 @@ const Message = ({ type, text }: MessageProps) => {
     </div>
   );
 };
-
 export default Message;
