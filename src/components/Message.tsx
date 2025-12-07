@@ -1,9 +1,9 @@
 interface MessageProps {
-  type: 'success' | 'error' | 'info' | '';
-  text: string;
+  type?: 'success' | 'error' | 'info' | '';
+  text?: string;
 }
 
-const Message = ({ type, text }: MessageProps) => {
+const Message = ({ type = '', text = '' }: MessageProps) => {
   if (!type || !text) return null;
 
   return (
