@@ -13,7 +13,7 @@ function App() {
         <main className="container">
           <Routes>
             <Route path="/" element={<OwnersPage />} />
-            <Route path="/pets" element={<PetsPage />} />
+            <Route path="/pets" element={<PetsPage type={''} text={''} />} />
             <Route path="/appointments" element={<AppointmentsPage />} />
           </Routes>
         </main>
