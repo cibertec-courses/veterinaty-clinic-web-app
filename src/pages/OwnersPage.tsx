@@ -5,7 +5,7 @@ import Message from '../components/Message';
 
 const OwnersPage = () => {
   const [owners, setOwners] = useState<Owner[]>([]);
-  const [message, setMessage] = useState<{ type: 'success' | 'error' | '', text: string }>({ type: '', text: '' });
+  const [message, setMessage] = useState<{ type: 'success' | 'error' | ''; text: string }>({ type: '', text: '' });
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState<number | null>(null);
   const [formData, setFormData] = useState<CreateOwnerDto>({
@@ -81,18 +81,26 @@ const OwnersPage = () => {
     setCurrentId(null);
     setIsEditing(false);
   };
+
+  const inputClass = "w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-200";
+  const labelClass = "block text-sm font-semibold text-gray-600 mb-2";
+  const btnPrimary = "px-6 py-2.5 bg-blue-600 text-white font-semibold text-sm rounded-lg hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 uppercase tracking-wide";
+  const btnSecondary = "px-6 py-2.5 bg-gray-500 text-white font-semibold text-sm rounded-lg hover:bg-gray-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 uppercase tracking-wide";
+
   return (
-    <div className="page">
-      <h1>Propietarios</h1>
-      
+    <div>
+      <h1 className="text-3xl font-bold text-white mb-6 drop-shadow-md">Propietarios</h1>
+
       <Message type={message.type} text={message.text} />
 
-      <div className="form-section">
-        <h3>{isEditing ? 'Editar Propietario' : 'Nuevo Propietario'}</h3>
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-gray-800 pb-4 mb-5 border-b-2 border-blue-500">
+          {isEditing ? 'Editar Propietario' : 'Nuevo Propietario'}
+        </h3>
         <form onSubmit={handleSubmit}>
-          <div className="form-row">
-            <div className="form-group">
-              <label>Nombre</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div>
+              <label className={labelClass}>Nombre</label>
               <input
                 type="text"
                 name="firstName"
@@ -100,10 +108,11 @@ const OwnersPage = () => {
                 onChange={handleChange}
                 placeholder="Juan"
                 required
+                className={inputClass}
               />
             </div>
-            <div className="form-group">
-              <label>Apellido</label>
+            <div>
+              <label className={labelClass}>Apellido</label>
               <input
                 type="text"
                 name="lastName"
@@ -111,10 +120,11 @@ const OwnersPage = () => {
                 onChange={handleChange}
                 placeholder="Pérez"
                 required
+                className={inputClass}
               />
             </div>
-            <div className="form-group">
-              <label>Teléfono</label>
+            <div>
+              <label className={labelClass}>Teléfono</label>
               <input
                 type="text"
                 name="phone"
@@ -122,10 +132,11 @@ const OwnersPage = () => {
                 onChange={handleChange}
                 placeholder="999888777"
                 required
+                className={inputClass}
               />
             </div>
-            <div className="form-group">
-              <label>Email</label>
+            <div>
+              <label className={labelClass}>Email</label>
               <input
                 type="email"
                 name="email"
@@ -133,54 +144,73 @@ const OwnersPage = () => {
                 onChange={handleChange}
                 placeholder="juan@mail.com"
                 required
+                className={inputClass}
               />
             </div>
           </div>
-          <div className="form-actions">
-            <button type="submit" className="btn btn-primary">
+          <div className="flex gap-3 mt-6">
+            <button type="submit" className={btnPrimary}>
               {isEditing ? 'Actualizar' : 'Guardar'}
             </button>
-            <button type="button" className="btn btn-secondary" onClick={clearForm}>
+            <button type="button" className={btnSecondary} onClick={clearForm}>
               Limpiar
             </button>
           </div>
         </form>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre Completo</th>
-            <th>Teléfono</th>
-            <th>Email</th>
-            <th>Mascotas</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {owners.map((owner) => (
-            <tr key={owner.id}>
-              <td>{owner.id}</td>
-              <td>{owner.fullName}</td>
-              <td>{owner.phone}</td>
-              <td>{owner.email}</td>
-              <td>{owner.petCount}</td>
-              <td className="actions">
-                <button className="btn btn-info btn-small" onClick={() => handleEdit(owner)}>
-                  Editar
-                </button>
-                <button className="btn btn-danger btn-small" onClick={() => handleDelete(owner.id)}>
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {owners.length > 0 && (
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-blue-600 text-white">
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">ID</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Nombre Completo</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Teléfono</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Email</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Mascotas</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {owners.map((owner) => (
+                <tr key={owner.id} className="hover:bg-gray-50 transition-colors duration-150">
+                  <td className="px-5 py-4 text-sm text-gray-700">{owner.id}</td>
+                  <td className="px-5 py-4 text-sm text-gray-800 font-medium">{owner.fullName}</td>
+                  <td className="px-5 py-4 text-sm text-gray-600">{owner.phone}</td>
+                  <td className="px-5 py-4 text-sm text-gray-600">{owner.email}</td>
+                  <td className="px-5 py-4 text-sm">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-semibold">
+                      {owner.petCount}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(owner)}
+                        className="px-3 py-1.5 bg-cyan-500 text-white text-xs font-semibold rounded-md hover:bg-cyan-600 transition-colors"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => handleDelete(owner.id)}
+                        className="px-3 py-1.5 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600 transition-colors"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {owners.length === 0 && (
-        <p className="empty-message">No hay propietarios registrados</p>
+        <div className="text-center py-12 text-white/90 bg-white/10 rounded-xl backdrop-blur-sm">
+          <p className="text-lg">No hay propietarios registrados</p>
+        </div>
       )}
     </div>
   );

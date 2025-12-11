@@ -119,13 +119,22 @@ const AppointmentsPage = () => {
     setIsEditing(false);
   };
 
-  const getStatusClass = (status: string) => {
-    switch (status) {
-      case 'Scheduled': return 'status-scheduled';
-      case 'Completed': return 'status-completed';
-      case 'Cancelled': return 'status-cancelled';
-      default: return '';
-    }
+  const getStatusBadge = (status: string) => {
+    const styles: Record<string, string> = {
+      Scheduled: 'bg-blue-100 text-blue-700',
+      Completed: 'bg-green-100 text-green-700',
+      Cancelled: 'bg-red-100 text-red-700',
+    };
+    const labels: Record<string, string> = {
+      Scheduled: 'Programada',
+      Completed: 'Completada',
+      Cancelled: 'Cancelada',
+    };
+    return (
+      <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${styles[status] || ''}`}>
+        {labels[status] || status}
+      </span>
+    );
   };
 
   const formatDate = (dateString: string) => {
@@ -135,24 +144,33 @@ const AppointmentsPage = () => {
     });
   };
 
+  const inputClass = "w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-200";
+  const selectClass = "w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed";
+  const labelClass = "block text-sm font-semibold text-gray-600 mb-2";
+  const btnPrimary = "px-6 py-2.5 bg-blue-600 text-white font-semibold text-sm rounded-lg hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 uppercase tracking-wide";
+  const btnSecondary = "px-6 py-2.5 bg-gray-500 text-white font-semibold text-sm rounded-lg hover:bg-gray-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 uppercase tracking-wide";
+
   return (
-    <div className="page">
-      <h1>Citas</h1>
+    <div>
+      <h1 className="text-3xl font-bold text-white mb-6 drop-shadow-md">Citas</h1>
 
       <Message type={message.type} text={message.text} />
 
-      <div className="form-section">
-        <h3>{isEditing ? 'Editar Cita' : 'Nueva Cita'}</h3>
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-gray-800 pb-4 mb-5 border-b-2 border-blue-500">
+          {isEditing ? 'Editar Cita' : 'Nueva Cita'}
+        </h3>
         <form onSubmit={handleSubmit}>
-          <div className="form-row">
-            <div className="form-group">
-              <label>Mascota</label>
+          <div className={`grid gap-5 ${isEditing ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-5' : 'grid-cols-1 md:grid-cols-3'}`}>
+            <div>
+              <label className={labelClass}>Mascota</label>
               <select
                 name="petId"
                 value={formData.petId}
                 onChange={handleChange}
                 required
                 disabled={isEditing}
+                className={selectClass}
               >
                 <option value={0}>Seleccionar...</option>
                 {pets.map((pet) => (
@@ -162,18 +180,19 @@ const AppointmentsPage = () => {
                 ))}
               </select>
             </div>
-            <div className="form-group">
-              <label>Fecha y Hora</label>
+            <div>
+              <label className={labelClass}>Fecha y Hora</label>
               <input
                 type="datetime-local"
                 name="appointmentDate"
                 value={formData.appointmentDate}
                 onChange={handleChange}
                 required
+                className={inputClass}
               />
             </div>
-            <div className="form-group">
-              <label>Motivo</label>
+            <div>
+              <label className={labelClass}>Motivo</label>
               <input
                 type="text"
                 name="reason"
@@ -181,83 +200,102 @@ const AppointmentsPage = () => {
                 onChange={handleChange}
                 placeholder="Vacunación, Control, etc."
                 required
+                className={inputClass}
               />
             </div>
             {isEditing && (
               <>
-                <div className="form-group">
-                  <label>Estado</label>
-                  <select name="status" value={formData.status} onChange={handleChange}>
+                <div>
+                  <label className={labelClass}>Estado</label>
+                  <select name="status" value={formData.status} onChange={handleChange} className={selectClass}>
                     <option value="Scheduled">Programada</option>
                     <option value="Completed">Completada</option>
                     <option value="Cancelled">Cancelada</option>
                   </select>
                 </div>
-                <div className="form-group">
-                  <label>Notas</label>
+                <div>
+                  <label className={labelClass}>Notas</label>
                   <input
                     type="text"
                     name="notes"
                     value={formData.notes}
                     onChange={handleChange}
                     placeholder="Notas del veterinario"
+                    className={inputClass}
                   />
                 </div>
               </>
             )}
           </div>
-          <div className="form-actions">
-            <button type="submit" className="btn btn-primary">
+          <div className="flex gap-3 mt-6">
+            <button type="submit" className={btnPrimary}>
               {isEditing ? 'Actualizar' : 'Guardar'}
             </button>
-            <button type="button" className="btn btn-secondary" onClick={clearForm}>
+            <button type="button" className={btnSecondary} onClick={clearForm}>
               Limpiar
             </button>
           </div>
         </form>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Mascota</th>
-            <th>Propietario</th>
-            <th>Motivo</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {appointments.map((appointment) => (
-            <tr key={appointment.id}>
-              <td>{appointment.id}</td>
-              <td>{formatDate(appointment.appointmentDate)}</td>
-              <td>{appointment.petName}</td>
-              <td>{appointment.ownerName}</td>
-              <td>{appointment.reason}</td>
-              <td className={getStatusClass(appointment.status)}>{appointment.status}</td>
-              <td className="actions">
-                <button className="btn btn-info btn-small" onClick={() => handleEdit(appointment)}>
-                  Editar
-                </button>
-                {appointment.canBeCancelled && (
-                  <button className="btn btn-warning btn-small" onClick={() => handleCancel(appointment.id)}>
-                    Cancelar
-                  </button>
-                )}
-                <button className="btn btn-danger btn-small" onClick={() => handleDelete(appointment.id)}>
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {appointments.length > 0 && (
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-blue-600 text-white">
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">ID</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Fecha</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Mascota</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Propietario</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Motivo</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Estado</th>
+                <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {appointments.map((appointment) => (
+                <tr key={appointment.id} className="hover:bg-gray-50 transition-colors duration-150">
+                  <td className="px-5 py-4 text-sm text-gray-700">{appointment.id}</td>
+                  <td className="px-5 py-4 text-sm text-gray-800 font-medium">{formatDate(appointment.appointmentDate)}</td>
+                  <td className="px-5 py-4 text-sm text-gray-600">{appointment.petName}</td>
+                  <td className="px-5 py-4 text-sm text-gray-600">{appointment.ownerName}</td>
+                  <td className="px-5 py-4 text-sm text-gray-600">{appointment.reason}</td>
+                  <td className="px-5 py-4 text-sm">{getStatusBadge(appointment.status)}</td>
+                  <td className="px-5 py-4">
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleEdit(appointment)}
+                        className="px-3 py-1.5 bg-cyan-500 text-white text-xs font-semibold rounded-md hover:bg-cyan-600 transition-colors"
+                      >
+                        Editar
+                      </button>
+                      {appointment.canBeCancelled && (
+                        <button
+                          onClick={() => handleCancel(appointment.id)}
+                          className="px-3 py-1.5 bg-amber-500 text-white text-xs font-semibold rounded-md hover:bg-amber-600 transition-colors"
+                        >
+                          Cancelar
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDelete(appointment.id)}
+                        className="px-3 py-1.5 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600 transition-colors"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {appointments.length === 0 && (
-        <p className="empty-message">No hay citas registradas</p>
+        <div className="text-center py-12 text-white/90 bg-white/10 rounded-xl backdrop-blur-sm">
+          <p className="text-lg">No hay citas registradas</p>
+        </div>
       )}
     </div>
   );

@@ -3,17 +3,16 @@ import Navbar from './components/Navbar';
 import OwnersPage from './pages/OwnersPage';
 import PetsPage from './pages/PetsPage';
 import AppointmentsPage from './pages/AppointmentsPage';
-import './App.css';
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="app">
+      <div className="min-h-screen bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900">
         <Navbar />
-        <main className="container">
+        <main className="w-full px-4 sm:px-6 lg:px-12 py-8">
           <Routes>
             <Route path="/" element={<OwnersPage />} />
-            <Route path="/pets" element={<PetsPage type={''} text={''} />} />
+            <Route path="/pets" element={<PetsPage />} />
             <Route path="/appointments" element={<AppointmentsPage />} />
           </Routes>
         </main>
